@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
+    public float cameraSmoothnes = 0.3f;
 
     private Camera mainCamera; 
     private Rigidbody2D rb;
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private bool flipped;
     private GameManager gameManager;
+    private Vector3 velocity = Vector3.zero;
 
     void Start()
     {
@@ -45,7 +47,7 @@ public class PlayerController : MonoBehaviour
             if (!gameManager.isStore) 
             {
                 Vector3 targetPosition = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
-                mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, targetPosition, Time.deltaTime * 5f);
+                mainCamera.transform.position = Vector3.SmoothDamp(mainCamera.transform.position, targetPosition, ref velocity, cameraSmoothnes);
             }
         }
 
