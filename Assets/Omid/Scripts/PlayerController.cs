@@ -58,4 +58,47 @@ public class PlayerController : MonoBehaviour
 
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+
+        if (other.CompareTag("ShopItem"))
+        {
+            Debug.Log("works");
+            GameManager gameManager = FindObjectOfType<GameManager>();
+
+            SpriteRenderer itemRenderer = other.GetComponent<SpriteRenderer>();
+
+            if (gameManager != null && itemRenderer != null)
+            {
+                int itemIndex = System.Array.IndexOf(gameManager.itemObjects, other.gameObject);
+
+                if (itemIndex >= 0 && itemIndex < gameManager.priceTexts.Length)
+                {
+                    string priceText = gameManager.priceTexts[itemIndex].text;
+
+                    if (int.TryParse(priceText.Replace("$", ""), out int price))
+                    {
+                        GameManager.currentItem = itemRenderer.sprite.name;
+                        GameManager.currentPrice = price;
+
+                        Debug.Log("Interacted with item: " + itemRenderer.sprite.name);
+                        Debug.Log("Price: $" + GameManager.currentPrice);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Failed to parse price for item: " + other.name);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Invalid item index: " + itemIndex);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("ShopController or SpriteRenderer not found.");
+            }
+        }
+    }
 }
