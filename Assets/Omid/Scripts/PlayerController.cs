@@ -5,13 +5,15 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
     public float cameraSmoothnes = 0.3f;
 
-    private Camera mainCamera; 
+    private Camera mainCamera;
     private Rigidbody2D rb;
     private Vector2 movement;
     private Animator animator;
     private bool flipped;
     private GameManager gameManager;
     private Vector3 velocity = Vector3.zero;
+    public static bool canTalk;
+    public static bool canMove;
 
     void Start()
     {
@@ -44,7 +46,7 @@ public class PlayerController : MonoBehaviour
 
         if (mainCamera != null)
         {
-            if (!gameManager.isStore) 
+            if (!gameManager.isStore)
             {
                 Vector3 targetPosition = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
                 mainCamera.transform.position = Vector3.SmoothDamp(mainCamera.transform.position, targetPosition, ref velocity, cameraSmoothnes);
@@ -55,13 +57,18 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-
-        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        if (canMove)
+        {
+            rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-
+        if (other.CompareTag("NPC"))
+        {
+            canTalk = true;
+        }
         if (other.CompareTag("ShopItem"))
         {
             Debug.Log("works");
@@ -101,4 +108,13 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("NPC"))
+        {
+            canTalk = false;
+        }
+    }
 }
+

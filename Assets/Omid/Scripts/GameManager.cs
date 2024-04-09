@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public bool sweetToggle;
     public bool saltyToggle;
     public bool alcoholicToggle;
-
+    public GameObject interactive;
 
     public GameObject[] itemObjects; 
     public Text[] priceTexts;
@@ -34,6 +34,14 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             RefreshShop();
+        }
+        if (PlayerController.canTalk)
+        {
+            interactive.SetActive(true);
+        }
+        else
+        {
+            interactive.SetActive(false);
         }
     }
 
