@@ -45,7 +45,6 @@ public class DialogueDevil : MonoBehaviour
         {
             PlayerController.canMove = true;
         }
-        Debug.Log(sentences.Count);
     }
 
     void StartDialog()
@@ -66,20 +65,19 @@ public class DialogueDevil : MonoBehaviour
     {
         isTyping = true;
 
-        // Display the name instantly in red color
         dialogText.text += "<color=red>Jabroni: </color>";
 
         foreach (char letter in sentences.Peek().ToCharArray())
         {
             dialogText.text += letter;
-            yield return new WaitForSeconds(typingSpeed); // Wait for typingSpeed seconds before typing the next character
+            yield return new WaitForSeconds(typingSpeed);
         }
         isTyping = false;
     }
 
     void LoadDialog()
     {
-        sentences.Enqueue("<color=red>Jabroni: </color>Well well, finally ready to pay your debt, bum?");
+        sentences.Enqueue("Well well, finally ready to pay your debt, bum?");
         sentences.Enqueue("Lets see...");
         sentences.Enqueue("As I recall, you owe me 290$ for that little... 'situation'...");
         sentences.Enqueue("But, I can see that you are very much broke");
