@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject blackPanel;
     public Text dayText;
-    public float fadeDuration = 1f; // Duration for fading in/out
+    public float fadeDuration = 1f;
     private CanvasGroup canvasGroup;
     private int currentDay = 1;
     private bool isFading = false;
@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        blackPanel.SetActive(true);
         canvasGroup = blackPanel.GetComponent<CanvasGroup>();
 
         canvasGroup.alpha = 0f;
@@ -128,7 +129,6 @@ public class GameManager : MonoBehaviour
     {
         isFading = true;
 
-        // Fade in
         while (canvasGroup.alpha < 1f)
         {
             canvasGroup.alpha += Time.deltaTime / fadeDuration;
@@ -137,15 +137,14 @@ public class GameManager : MonoBehaviour
         }
 
 
-
-        // Wait for a moment
         yield return new WaitForSeconds(1f);
-        // Update day
+
         currentDay++;
         dayText.text = "Day " + currentDay;
+
         yield return new WaitForSeconds(1f);
 
-        // Fade out
+
         while (canvasGroup.alpha > 0f)
         {
             canvasGroup.alpha -= Time.deltaTime / fadeDuration;
