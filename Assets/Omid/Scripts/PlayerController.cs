@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        GameManager.sleep = false;
     }
 
     void Update()
@@ -69,6 +70,10 @@ public class PlayerController : MonoBehaviour
         {
             canTalk = true;
         }
+        if (other.CompareTag("Bed"))
+        {
+            GameManager.sleep = true;
+        }
         if (other.CompareTag("ShopItem"))
         {
             Debug.Log("works");
@@ -114,6 +119,10 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("NPC"))
         {
             canTalk = false;
+        }
+        if (other.CompareTag("Bed"))
+        {
+            GameManager.sleep = false;
         }
     }
 }

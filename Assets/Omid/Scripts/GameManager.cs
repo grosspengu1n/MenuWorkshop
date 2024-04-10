@@ -11,6 +11,15 @@ public class GameManager : MonoBehaviour
     public bool alcoholicToggle;
     public GameObject interactive;
 
+    public GameObject blackPanel;
+    public Text dayText;
+    public float fadeDuration = 1f; // Duration for fading in/out
+    private CanvasGroup canvasGroup;
+    private int currentDay = 1;
+    private bool isFading = false;
+
+
+
     public GameObject[] itemObjects; 
     public Text[] priceTexts;
 
@@ -27,7 +36,14 @@ public class GameManager : MonoBehaviour
 
     public static string currentItem;
     public static int currentPrice;
+    public static bool sleep;
 
+    private void Start()
+    {
+        canvasGroup = blackPanel.GetComponent<CanvasGroup>();
+
+        canvasGroup.alpha = 0f;
+    }
 
     private void Update()
     {
@@ -35,7 +51,7 @@ public class GameManager : MonoBehaviour
         {
             RefreshShop();
         }
-        if (PlayerController.canTalk)
+        if (PlayerController.canTalk || sleep)
         {
             interactive.SetActive(true);
         }
@@ -43,6 +59,13 @@ public class GameManager : MonoBehaviour
         {
             interactive.SetActive(false);
         }
+
+
+        if (Input.GetKeyDown(KeyCode.E) && sleep && !isFading)
+        {
+            StartCoroutine(ChangeDay());
+        }
+
     }
 
 
@@ -99,5 +122,37 @@ public class GameManager : MonoBehaviour
         } while (usedIndices.Contains(randomIndex));
 
         return randomIndex;
+    }
+
+    private IEnumerator ChangeDay()
+    {
+        isFading = true;
+
+        // Fade in
+        while (canvasGroup.alpha < 1f)
+        {
+            canvasGroup.alpha += Time.deltaTime / fadeDuration;
+            yield return null;
+            Debug.Log(Time.deltaTime / fadeDuration);
+        }
+
+
+
+        // Wait for a moment
+        yield return new WaitForSeconds(1f);
+        // Update day
+        currentDay++;
+        dayText.text = "Day " + currentDay;
+        yield return new WaitForSeconds(1f);
+
+        // Fade out
+        while (canvasGroup.alpha > 0f)
+        {
+            canvasGroup.alpha -= Time.deltaTime / fadeDuration;
+            yield return null;
+            Debug.Log(Time.deltaTime / fadeDuration);
+        }
+
+        isFading = false;
     }
 }

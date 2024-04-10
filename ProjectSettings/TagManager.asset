@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ShopItem
   - NPC
+  - Bed
   layers:
   - Default
   - TransparentFX

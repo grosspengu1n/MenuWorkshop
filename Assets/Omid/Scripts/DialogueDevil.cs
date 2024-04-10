@@ -15,7 +15,6 @@ public class DialogueDevil : MonoBehaviour
     private Queue<string> sentences;
     private bool isTalking = false;
     private bool initialD = false;
-    private bool chitchatD = false;
     private bool isTyping = false;
 
     void Start()
