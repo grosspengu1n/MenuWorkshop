@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.MaterialProperty;
 
 public class GameManager : MonoBehaviour
 {
     public bool isStore;
-    public bool sweetToggle;
-    public bool saltyToggle;
-    public bool alcoholicToggle;
     public GameObject interactive;
 
     public GameObject blackPanel;
@@ -18,41 +17,32 @@ public class GameManager : MonoBehaviour
     private int currentDay = 1;
     private bool isFading = false;
 
+    public GameObject[] items;
 
+    private GameObject player;
+    private GameObject currentItem;
 
-    public GameObject[] itemObjects; 
-    public Text[] priceTexts;
+    public static int coins;
+    public static int debt;
 
-    public Sprite[] sweetSprites;
-    public float[] sweetPrices; 
-
-    public Sprite[] saltySprites;
-    public float[] saltyPrices;
-
-    public Sprite[] alcoholicSprites;
-    public float[] alcoholicPrices;
-
-    private List<int> usedIndices = new List<int>();
-
-    public static string currentItem;
-    public static int currentPrice;
     public static bool sleep;
-
+    public static int itId;
+    public static int itPrice;
     private void Start()
     {
+        coins = 200;
+        player = GameObject.Find("Player");
         blackPanel.SetActive(true);
         canvasGroup = blackPanel.GetComponent<CanvasGroup>();
 
         canvasGroup.alpha = 0f;
+
     }
+
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            RefreshShop();
-        }
-        if (PlayerController.canTalk || sleep)
+        if (PlayerController.canTalk || sleep || itId!=0)
         {
             interactive.SetActive(true);
         }
@@ -61,6 +51,16 @@ public class GameManager : MonoBehaviour
             interactive.SetActive(false);
         }
 
+        if (Input.GetKeyDown(KeyCode.E) && itId != 0)
+        {
+            if (itPrice<=coins)
+            {
+                Debug.Log("works");
+                BuyItem(itId);
+                coins -= itPrice;
+            }
+
+        }
 
         if (Input.GetKeyDown(KeyCode.E) && sleep && !isFading)
         {
@@ -69,61 +69,37 @@ public class GameManager : MonoBehaviour
 
     }
 
-
-    public void RefreshShop()
+    // Метод для покупки предмета
+    public void BuyItem(int itemId)
     {
-        ClearItems();
-        usedIndices.Clear();
+        if (currentItem != null)
+        {
+            Debug.Log("Уже есть предмет над головой игрока.");
+            return;
+        }
 
-        if (sweetToggle)
+        foreach (GameObject item in items)
         {
-            SetRandomItems(sweetSprites, sweetPrices);
-        }
-        else if (saltyToggle)
-        {
-            SetRandomItems(saltySprites, saltyPrices);
-        }
-        else if (alcoholicToggle)
-        {
-            SetRandomItems(alcoholicSprites, alcoholicPrices);
+            ItemProperties properties = item.GetComponent<ItemProperties>();
+            if (properties.itemId == itemId)
+            {
+                currentItem = Instantiate(item, player.transform.position + Vector3.up, Quaternion.identity);
+                currentItem.transform.parent = player.transform;
+                break;
+            }
         }
     }
 
-    private void ClearItems()
+    // Метод для сохранения предмета между сценами
+    public void SaveCurrentItem()
     {
-        foreach (var obj in itemObjects)
+        if (currentItem != null)
         {
-            obj.GetComponent<SpriteRenderer>().sprite = null;
-        }
-
-        foreach (var text in priceTexts)
-        {
-            text.text = "";
+            DontDestroyOnLoad(currentItem);
         }
     }
 
-    private void SetRandomItems(Sprite[] sprites, float[] prices)
-    {
-        for (int i = 0; i < itemObjects.Length; i++)
-        {
-            int randomIndex = GetUniqueRandomIndex(sprites.Length);
-            usedIndices.Add(randomIndex);
 
-            itemObjects[i].GetComponent<SpriteRenderer>().sprite = sprites[randomIndex];
-            priceTexts[i].text = "$" + prices[randomIndex].ToString();
-        }
-    }
-
-    private int GetUniqueRandomIndex(int maxValue)
-    {
-        int randomIndex;
-        do
-        {
-            randomIndex = Random.Range(0, maxValue);
-        } while (usedIndices.Contains(randomIndex));
-
-        return randomIndex;
-    }
 
     private IEnumerator ChangeDay()
     {

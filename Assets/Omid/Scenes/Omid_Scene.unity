@@ -217,7 +217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &121520235
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2809,7 +2809,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: fa7be0fa9101710479f5eb778a7f4fe6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6f2ec9ae777c1504ca970c576ff2a30f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3157,21 +3157,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStore: 0
-  sweetToggle: 0
-  saltyToggle: 0
-  alcoholicToggle: 0
   interactive: {fileID: 20417201}
   blackPanel: {fileID: 121520234}
   dayText: {fileID: 1681432732}
   fadeDuration: 2
-  itemObjects: []
-  priceTexts: []
-  sweetSprites: []
-  sweetPrices: []
-  saltySprites: []
-  saltyPrices: []
-  alcoholicSprites: []
-  alcoholicPrices: []
+  itemsSweet: []
+  itemsSalty: []
+  itemsDrinks: []
 --- !u!1 &1672141694
 GameObject:
   m_ObjectHideFlags: 0
@@ -3387,7 +3379,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: fa7be0fa9101710479f5eb778a7f4fe6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6f2ec9ae777c1504ca970c576ff2a30f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

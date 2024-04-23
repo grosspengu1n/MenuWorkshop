@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        canMove = true;
         mainCamera = Camera.main;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         animator = GetComponent<Animator>();
@@ -76,41 +77,8 @@ public class PlayerController : MonoBehaviour
         }
         if (other.CompareTag("ShopItem"))
         {
-            Debug.Log("works");
-            GameManager gameManager = FindObjectOfType<GameManager>();
-
-            SpriteRenderer itemRenderer = other.GetComponent<SpriteRenderer>();
-
-            if (gameManager != null && itemRenderer != null)
-            {
-                int itemIndex = System.Array.IndexOf(gameManager.itemObjects, other.gameObject);
-
-                if (itemIndex >= 0 && itemIndex < gameManager.priceTexts.Length)
-                {
-                    string priceText = gameManager.priceTexts[itemIndex].text;
-
-                    if (int.TryParse(priceText.Replace("$", ""), out int price))
-                    {
-                        GameManager.currentItem = itemRenderer.sprite.name;
-                        GameManager.currentPrice = price;
-
-                        Debug.Log("Interacted with item: " + itemRenderer.sprite.name);
-                        Debug.Log("Price: $" + GameManager.currentPrice);
-                    }
-                    else
-                    {
-                        Debug.LogWarning("Failed to parse price for item: " + other.name);
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning("Invalid item index: " + itemIndex);
-                }
-            }
-            else
-            {
-                Debug.LogWarning("ShopController or SpriteRenderer not found.");
-            }
+            GameManager.itId = other.GetComponent<ItemProperties>().itemId;
+            GameManager.itPrice = other.GetComponent<ItemProperties>().itemPrice;
         }
     }
 
@@ -123,6 +91,12 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Bed"))
         {
             GameManager.sleep = false;
+        }
+        if (other.CompareTag("ShopItem"))
+        {
+            Debug.Log("works");
+            GameManager.itId = 0;
+            GameManager.itPrice = 0;
         }
     }
 }
